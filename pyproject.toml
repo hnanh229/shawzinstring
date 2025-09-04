@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shawzinstring"
+version = "0.1.0"
+description = "Convert MIDI files to Warframe Shawzin format with advanced musical analysis"
+readme = "README.md"
+authors = [
+    {name = "HN_Anh", email = "vl2anh1@gmail.com"}
+]
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "mido==1.2.9",
+]
+keywords = ["midi", "shawzin", "shawzinstring", "warframe", "music", "converter", "audio", "game"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio :: MIDI",
+    "Topic :: Games/Entertainment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "black",
+    "flake8",
+    "mypy",
+]
+test = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+docs = [
+    "sphinx>=4.0",
+    "sphinx-rtd-theme",
+]
+
+[project.scripts]
+shawzinstring = "midi2shawzin.cli:main"
+midi2shawzin = "midi2shawzin.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/hnanh229/shawzinstring"
+Repository = "https://github.com/hnanh229/shawzinstring"
+Issues = "https://github.com/hnanh229/shawzinstring/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["midi2shawzin*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+]
+markers = [
+    "integration: marks tests as integration tests",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
