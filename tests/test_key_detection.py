@@ -93,6 +93,24 @@ class TestKeyDetection:
         assert root == 0  # C
         assert scale_id == 2  # Major (heptatonic)
         assert score > 0.8  # High confidence
+
+    def test_detect_c_major_melody_synthetic(self):
+        """Test detection with synthetic C major melody (C4,E4,G4,C5) using mido-style input."""
+        # Create C major chord/melody as specified: C4, E4, G4, C5
+        events = [
+            Event(type='note', note=60, time_sec=0.0, delta_sec=0.5, velocity=80),  # C4
+            Event(type='note', note=64, time_sec=0.5, delta_sec=0.5, velocity=80),  # E4
+            Event(type='note', note=67, time_sec=1.0, delta_sec=0.5, velocity=80),  # G4
+            Event(type='note', note=72, time_sec=1.5, delta_sec=0.5, velocity=80),  # C5
+        ]
+        
+        root, scale_id, score = detect_best_scale(events)
+        
+        # Should detect C (root=0) and major scale
+        assert root == 0  # C
+        # C major chord fits best with pentatonic major (scale 7) due to limited notes
+        assert scale_id in [2, 7]  # Major scale or pentatonic major
+        assert score > 0.5  # Should have reasonable confidence
     
     def test_detect_a_minor_scale(self):
         """Test detection of A minor scale."""

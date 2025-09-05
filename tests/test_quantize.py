@@ -148,6 +148,29 @@ class TestQuantizer:
         # Floor mode: 0.123 -> 0.0, 0.247 -> 0.125
         assert quantized[0].time_sec == pytest.approx(0.0, abs=1e-6)
         assert quantized[1].time_sec == pytest.approx(0.125, abs=1e-6)
+
+    def test_synthesize_note_times_quantize_to_sixteenth(self):
+        """Test synthesized note times and assert quantize snaps to 1/16."""
+        # Synthesize note events with slightly off-grid timing
+        events = [
+            Event(type='note', note=60, time_sec=0.121, delta_sec=0.121, velocity=80),  # Near 1/16 (0.125)
+            Event(type='note', note=62, time_sec=0.243, delta_sec=0.122, velocity=80),  # Near 2/16 (0.25)  
+            Event(type='note', note=64, time_sec=0.489, delta_sec=0.246, velocity=80),  # Near 4/16 (0.5)
+            Event(type='note', note=65, time_sec=0.748, delta_sec=0.259, velocity=80),  # Near 6/16 (0.75)
+        ]
+        
+        tempo_us_per_beat = 500_000  # 120 BPM  
+        ticks_per_beat = 480
+        
+        # Quantize to 1/16 note grid
+        settings = QuantizeSettings(subdivision=16, mode='nearest')
+        quantized = quantize_events(events, ticks_per_beat, tempo_us_per_beat, settings)
+        
+        # Assert notes snap exactly to 1/16 note grid (0.125 second intervals)
+        expected_times = [0.125, 0.25, 0.5, 0.75]
+        for i, expected_time in enumerate(expected_times):
+            assert quantized[i].time_sec == pytest.approx(expected_time, abs=1e-6), \
+                f"Note {i} should be quantized to {expected_time}, got {quantized[i].time_sec}"
         
     def test_tempo_detection(self):
         """Test automatic tempo detection from note events."""

@@ -406,6 +406,26 @@ class TestMappingAccuracy:
         # Should have good coverage for major scale
         assert analysis['coverage'] >= 0.7  # At least 70% coverage
         assert analysis['avg_deviation'] <= 2.0  # Average within 2 semitones
+
+    def test_build_playable_table_and_map_notes_within_range(self):
+        """Test building playable table for a scale and mapping notes within ±2 semitones."""
+        # Build playable table for major scale (scale 2) with appropriate range
+        scale_id = 2
+        table = build_playable_table(scale_id, octave_range=(0, 8))  # Wider range to cover C4-C5
+        
+        # Test notes from C major scale 
+        test_notes = [60, 62, 64, 65, 67, 69, 71, 72]  # C4 to C5
+        
+        for original_note in test_notes:
+            char, mapped_midi, octave_shift = map_note_to_shawzin(original_note, table)
+            
+            # Assert mapped MIDI is within ±2 semitones of original
+            deviation = abs(mapped_midi - original_note)
+            assert deviation <= 2, \
+                f"Note {original_note} mapped to {mapped_midi} (deviation: {deviation} semitones > 2)"
+            
+            # Assert we got a valid Shawzin character
+            assert char in "123qweasdzxc", f"Invalid Shawzin character: {char}"
     
     def test_chromatic_mapping_accuracy(self):
         """Test accuracy for chromatic notes."""

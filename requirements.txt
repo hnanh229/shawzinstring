@@ -1,0 +1,17 @@
+# MIDI to Shawzin Converter Dependencies
+# Python 3.10+ required
+
+# Core dependencies
+mido==1.2.9              # MIDI file parsing and manipulation
+pytest>=7.0.0            # Testing framework
+pytest-cov>=4.0.0        # Test coverage reporting
+
+# Development dependencies (optional)
+black>=22.0.0            # Code formatting
+isort>=5.10.0            # Import sorting
+mypy>=0.991              # Type checking
+flake8>=5.0.0            # Linting
+
+# Documentation (optional)
+sphinx>=5.0.0            # Documentation generation
+sphinx-rtd-theme>=1.0.0  # Documentation theme
